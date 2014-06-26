@@ -8,6 +8,9 @@ package equationsolving;
 import java.util.Scanner;
 import java.util.Deque;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.AbstractList;
+import java.util.Arrays;
 
 /**
  *
@@ -38,9 +41,18 @@ public class EquationSolving {
     }
     
     public static eqel[] RPNCreate (String equation) {
-        eqel[] RPN = new eqel[0];
+        eqel[] RPN = new eqel[equation.length()];
+        for(int i=0;i<RPN.length;++i) {
+            RPN[i] = new eqel(equation.charAt(i));
+        }
         
         return RPN;
+    }
+    
+    public static eqel[] equationSimplify(eqel[] toSimplify) {
+        ArrayList<eqel> simplified = new ArrayList<eqel>(Arrays.asList(toSimplify));
+        eqel[] out = simplified.toArray(new eqel[simplified.size()]);
+        return out;
     }
     
     public static int RPNSolve (eqel[] equation) {

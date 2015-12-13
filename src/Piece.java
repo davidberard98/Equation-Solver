@@ -1,5 +1,5 @@
 /**
- * @author davidberard
+ * @author David Berard
  * 
  * Ordered list of operations, numbers, vars within "eqel"
  */

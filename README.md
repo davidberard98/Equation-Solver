@@ -5,9 +5,10 @@ java -cp build/ equationsolving.EquationSolving
 ```
 
 ===Ideas===
-- Probably use RPN (reverse polish notation)
-- basically, try to convert everything into no parentheses.
+- Order of operations.  Once we have no parentheses, then we should try to:
+	* Turn logs, exponents, factorials into new Pieces
+	* Re-order to have no parentheses with arithmatic.
 
 ===Future functions===
 - +, -, *, /; logs, exponents, powers.
-- constants including pi, e...
+- constants including pi, e...!!! This is type 8!

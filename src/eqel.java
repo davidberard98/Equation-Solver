@@ -1,5 +1,5 @@
 /**
- * @author davidberard
+ * @author David Berard
  * 
  * EQuation ELement: Operator, number, variable...
  */
@@ -24,6 +24,9 @@ public class eqel {
     public static final char rparen = 6;
     public static final char equal = 7;
     public static final char factorial = 8;
+    public static final char power = 9;
+    public static final char log = 10;
+    public static final char naturallog = 11;
     
     public static final char validOperator = 1;
     public static final char numberException = 2;
@@ -36,6 +39,7 @@ public class eqel {
     public static final char equalType = 5;
     public static final char whitespaceType = 6;
     public static final char pieceType = 7;
+    public static final char constantType = 8; // NEED TO IMPLEMENT
     
     public eqel(double num) {
         type = numberType;
@@ -93,6 +97,18 @@ public class eqel {
 		else if(input.equals("!")) {
 			type = operatorType;
 			otherValue=factorial;
+		}
+		else if(input.equals("^")) {
+			type = operatorType;
+			otherValue=power;
+		}
+		else if(input.equals("log")) {
+			type = operatorType;
+			otherValue=log;
+		}
+		else if(input.equals("ln")) {
+			type = operatorType;
+			otherValue=naturallog;
 		}
         else {
             type = variableType;

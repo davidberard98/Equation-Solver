@@ -1,5 +1,5 @@
 /**
- * @author davidberard
+ * @author David Berard
  * 
  * List of pieces's so that you can have recursive pieces... = parentheses
  */

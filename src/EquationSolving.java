@@ -1,5 +1,5 @@
 /**
- * @author davidberard
+ * @author David Berard
  */
 
 package equationsolving;
@@ -114,8 +114,55 @@ public class EquationSolving {
 			main.add(equalSign);
 			main.add(endElement);
 		}
+		else // if there's no equal sign, then worry about parentheses & stuff like that
+		{
+			Piece formatted = mainParse(parts, pls);  // split up
+		}
 		
 		return mainid;
+	}
+	
+	public static Piece mainParse(List<String> parts, PieceList pls)
+	{
+	// Split up the parse() function: this looks at the nitty gritty +, -, /, *, log.. stuff.
+		boolean isAParen  = false;
+		for(int i=0;i<parts.size();++i)
+		{
+			if(eqel.valtype(parts.get(i).charAt(0)) == eqel.parenType)
+			{
+				isAParen = true;
+				break;
+			}
+		}
+		
+		Piece output = new Piece();
+		
+		for(int i=0;i<parts.size();++i)
+		{
+			int ttype = eqel.valtype(parts.get(i).charAt(0));
+			//paren, whitespace (not here), number, equal (not here), variable, constant
+			if(ttype == eqel.numberType)
+			{
+				double numbervalue = Double.parseDouble(parts.get(i));
+				eqel thisval = new eqel(numbervalue);
+				output.add(thisval);
+			}
+			if(ttype == eqel.parenType)
+			{
+				//Parse the parentheses!
+			}
+			else
+			{
+				eqel thisval = new eqel(parts.get(i));
+				output.add(thisval);
+			}
+		}
+		return output;
+	}
+	
+	public static void reviewParse(int mainid, PieceList pls)
+	{
+		// Clarify/ease of use in: ln, log, power
 	}
 
     

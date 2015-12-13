@@ -1,22 +1,16 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- * EQuation ELement
+/**
+ * @author davidberard
+ * 
+ * EQuation ELement: Operator, number, variable...
  */
 
 package equationsolving;
 
-import static equationsolving.eqel.add;
-import static equationsolving.eqel.plus;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-/**
- *
- * @author davidberard
- */
-public class eqel {
+
+public class eqel { 
     char type;
     double numberValue;
     char otherValue;
@@ -113,40 +107,10 @@ public class eqel {
         return "";
     }
     
-    public static eqel execute(eqel order, Deque<Double> stack) {
-        if(order.type == numberType) {
-            stack.push(order.numberValue);
-            return new eqel(1.0, numberException);
-        }
-        else if(order.type == operatorType) {
-            if(order.otherValue == plus) return new eqel(add(stack));
-            else if(order.otherValue == minus) return new eqel(subtract(stack));
-            else if(order.otherValue == multiply) return new eqel(multiply(stack));
-            else if(order.otherValue == divide) return new eqel(divide(stack));
-        }
-        return new eqel(1.0, variableException);
-    }
+    public void setValue(String tvalue) {
+		name = tvalue;
+	}
     
-    public static double add(Deque<Double> stack) {
-        return stack.pop() + stack.pop();
-    }
-    
-    public static double subtract(Deque<Double> stack) {
-        return -stack.pop() + stack.pop();
-    }
-    
-    public static double multiply(Deque<Double> stack) {
-        return stack.pop() * stack.pop();
-    }
-    
-    public static double divide(Deque<Double> stack) {
-        double a = stack.pop();
-        double b = stack.pop();
-        if(a == 0) {
-            return 0;
-        }
-        return b/a;
-    }
     
     public void display() {
         System.out.println(value());

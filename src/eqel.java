@@ -14,6 +14,7 @@ public class eqel {
     char type;
     double numberValue;
     char otherValue;
+    int pieceLocation = -1;
     String name;
     public static final char plus = 1;
     public static final char minus = 2;
@@ -21,6 +22,8 @@ public class eqel {
     public static final char divide = 4;
     public static final char lparen = 5;
     public static final char rparen = 6;
+    public static final char equal = 7;
+    public static final char factorial = 8;
     
     public static final char validOperator = 1;
     public static final char numberException = 2;
@@ -32,6 +35,7 @@ public class eqel {
     public static final char parenType = 4;
     public static final char equalType = 5;
     public static final char whitespaceType = 6;
+    public static final char pieceType = 7;
     
     public eqel(double num) {
         type = numberType;
@@ -46,35 +50,56 @@ public class eqel {
     }
     
     public eqel(String input) {
-        if(input.equals("+")) {
+		parseThing(input);
+    }
+    
+    public eqel(int input, char thisType) {
+		if(thisType == pieceType) {
+			pieceLocation = input;
+			type = thisType;
+		}
+	}
+    
+    public int parseThing(String input)
+    {
+		if(input.equals("+")) {
             type = operatorType;
-            otherValue=1;
+            otherValue=plus;
         }
         else if(input.equals("-")) {
             type = operatorType;
-            otherValue=2;
+            otherValue=minus;
         }
         else if(input.equals("*")) {
             type = operatorType;
-            otherValue=3;
+            otherValue=multiply;
         }
         else if(input.equals("/")) {
             type = operatorType;
-            otherValue=4;
+            otherValue=divide;
         }
         else if(input.equals("(")) {
             type = operatorType;
-            otherValue=5;
+            otherValue=lparen;
         }
         else if(input.equals(")")) {
             type = operatorType;
-            otherValue=6;
+            otherValue=rparen;
         }
+        else if(input.equals("=")) {
+			type = operatorType;
+			otherValue=equal;
+		}
+		else if(input.equals("!")) {
+			type = operatorType;
+			otherValue=factorial;
+		}
         else {
             type = variableType;
             name=input;
         }
-    }
+        return type;
+	}
     
     public static char eltype(char in) { // element type
         //char "in" is an actual character

@@ -13,7 +13,7 @@ public class Piece {
 	
 	List<eqel> allElements= new ArrayList<>();
 	public int id = -1;
-	public String notes = "";
+	public List<String> notes = new ArrayList<>();
 	
 	public Piece () { this.id=0; }
 	public Piece (int in) { this.id = in; }

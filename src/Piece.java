@@ -6,20 +6,21 @@
 
 package equationsolving;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
+import java.util.List;
+import java.util.ArrayList;
 
 public class Piece {
 	
-	Deque<eqel> allElements= new ArrayDeque<>();
+	List<eqel> allElements= new ArrayList<>();
 	public int id = -1;
+	public String notes = "";
 	
 	public Piece () { this.id=0; }
 	public Piece (int in) { this.id = in; }
 	
 	public void add (eqel input) {
 		input.display();
-		allElements.push(input);
+		allElements.add(input);
 	}
 	public int length () {
 		return allElements.size();

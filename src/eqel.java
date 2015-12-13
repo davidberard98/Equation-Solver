@@ -29,6 +29,9 @@ public class eqel {
     public static final char operatorType = 1;
     public static final char numberType = 2;
     public static final char variableType = 3;
+    public static final char parenType = 4;
+    public static final char equalType = 5;
+    public static final char whitespaceType = 6;
     
     public eqel(double num) {
         type = numberType;
@@ -109,6 +112,22 @@ public class eqel {
     
     public void setValue(String tvalue) {
 		name = tvalue;
+	}
+	
+	public static int valtype(char input)
+	{
+		if(input == 32)
+			return whitespaceType;
+		else if( input == 40 || input == 41 || input == 123 || input == 125 || input == 91 || input == 93 )
+			return parenType;
+		else if( input == 46 || (48 <= input && input <= 57) )
+			return numberType;
+		else if( input == 61 )
+			return equalType;
+		else if( (65 <= input && input <= 90) || (97 <= input && input <= 122))
+			return variableType;
+		else
+			return operatorType;
 	}
     
     

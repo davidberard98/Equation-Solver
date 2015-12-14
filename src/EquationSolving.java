@@ -37,6 +37,8 @@ public class EquationSolving {
         
         List<String> parts = basicParse(input);
         parse(parts, alleq);
+        
+        alleq.display();
     }
     
     public static List<String> basicParse(String in)
@@ -117,6 +119,8 @@ public class EquationSolving {
 		else // if there's no equal sign, then worry about parentheses & stuff like that
 		{
 			Piece formatted = mainParse(parts, pls);  // split up
+			main.transfer(formatted);
+			formatted = null;
 		}
 		
 		return mainid;
@@ -125,6 +129,8 @@ public class EquationSolving {
 	public static Piece mainParse(List<String> parts, PieceList pls)
 	{
 	// Split up the parse() function: this looks at the nitty gritty +, -, /, *, log.. stuff.
+	
+	/*
 		boolean isAParen  = false;
 		for(int i=0;i<parts.size();++i)
 		{
@@ -133,23 +139,50 @@ public class EquationSolving {
 				isAParen = true;
 				break;
 			}
-		}
+		} */
 		
 		Piece output = new Piece();
 		
 		for(int i=0;i<parts.size();++i)
 		{
+			// Types: paren, whitespace (not here), number, equal (not here), variable, constant...
 			int ttype = eqel.valtype(parts.get(i).charAt(0));
-			//paren, whitespace (not here), number, equal (not here), variable, constant
 			if(ttype == eqel.numberType)
 			{
 				double numbervalue = Double.parseDouble(parts.get(i));
 				eqel thisval = new eqel(numbervalue);
 				output.add(thisval);
 			}
-			if(ttype == eqel.parenType)
+			else if(ttype == eqel.parenType && eqel.parenParse(parts.get(i).charAt(0))%2 == 1)
 			{
-				//Parse the parentheses!
+				int parenCount = 1;
+				// Find the char of the closing paren.
+				char nextParen = eqel.reverseParenParse(eqel.parenParse(parts.get(i).charAt(0))+1);
+				List<String> insideParts = new ArrayList<>();
+				int j = 0;
+				for(j=1;j+i<parts.size();++j)
+				{
+					if(eqel.valtype(parts.get(i+j).charAt(0)) == eqel.parenType)
+					{
+						if(eqel.parenParse(parts.get(i+j).charAt(0)) %2 == 1)
+							++parenCount;
+						else
+							--parenCount;
+					}
+					if(parenCount == 0)
+					{
+						if(parts.get(i+j).charAt(0) != nextParen) {
+							System.out.println("::ERROR:: Parentheses not matching correctly.");
+							return output;
+						}
+						break;
+					}
+					insideParts.add(parts.get(i+j));
+				}
+				i += j;
+				int parenSectionId = parse(insideParts, pls);
+				eqel thisPiece = new eqel(parenSectionId, eqel.pieceType);
+				output.add(thisPiece);
 			}
 			else
 			{

@@ -19,11 +19,21 @@ public class Piece {
 	public Piece (int in) { this.id = in; }
 	
 	public void add (eqel input) {
-		input.display();
 		allElements.add(input);
 	}
 	public int length () {
 		return allElements.size();
+	}
+	public void display () {
+		for(int i=0;i<this.length();++i) {
+			allElements.get(i).display();
+		}
+	}
+	public void transfer(Piece input)
+	{
+		this.allElements = input.allElements;
+		this.id = input.id;
+		this.notes = input.notes;
 	}
 	
 }

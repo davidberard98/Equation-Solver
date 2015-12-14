@@ -25,4 +25,12 @@ public class PieceList {
 	public Piece at(int input) {
 		return database[input];
 	} 
+	public void display() {
+		for(int i=0;i<counter;++i)
+		{
+			System.out.println("Piece " + i + ":");
+			database[i].display();
+			System.out.println();
+		}
+	}
 }

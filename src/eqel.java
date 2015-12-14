@@ -126,7 +126,7 @@ public class eqel {
     
     public String value() {
         if(type == operatorType)
-        {
+        { /*
             if(otherValue == 1)
                 return "+";
             if(otherValue == 2)
@@ -138,17 +138,23 @@ public class eqel {
             if(otherValue == 5)
                 return "(";
             if(otherValue == 6)
-                return ")";
+                return ")"; */
+			String out = "operator " + Integer.toString(otherValue);
+			return out;
         }
         if(type == variableType)
         {
-            return name;
+            return "variable " + name;
         }
         if(type == numberType)
         {
-            return Double.toString(numberValue);
+            return "number " + Double.toString(numberValue);
         }
-        return "";
+        if(type == pieceType)
+		{
+			return "Piece, id " + Integer.toString(pieceLocation);
+		}
+        return "? " + Integer.toString(type) + " " + Integer.toString(otherValue) + "...";
     }
     
     public void setValue(String tvalue) {
@@ -170,9 +176,43 @@ public class eqel {
 		else
 			return operatorType;
 	}
+	
+	public static int parenParse(char input)
+	{
+		/*
+		 * 1: (
+		 * 2: )
+		 * 3: [
+		 * 4: ]
+		 * 5: {
+		 * 6: }
+		 */
+		int ival = (int) input;
+		switch(ival) {
+			case 40:	return 1;
+			case 41:	return 2;
+			case 91:	return 3;
+			case 93:	return 4;
+			case 123:	return 5;
+			case 125:	return 6;
+		}
+		return -1;
+	}
+	public static char reverseParenParse(int input)
+	{
+		switch(input) {
+			case 1:	return '(';
+			case 2:	return ')';
+			case 3:	return '[';
+			case 4:	return ']';
+			case 5:	return '{';
+			case 6:	return '}';
+		}
+		return ' ';
+	}
     
     
     public void display() {
-        System.out.println(value());
+        System.out.println(this.value());
     }
 }

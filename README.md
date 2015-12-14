@@ -12,3 +12,8 @@ java -cp build/ equationsolving.EquationSolving
 ===Future functions===
 - +, -, *, /; logs, exponents, powers.
 - constants including pi, e...!!! This is type 8!
+
+==REDO==
+I should redo it so that it goes from List<String> -> List<eqel> before being split into Pieces.
+
+That way, it'll be easier to insert parentheses around ln, etc...

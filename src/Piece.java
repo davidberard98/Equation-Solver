@@ -24,6 +24,9 @@ public class Piece {
 	public int length () {
 		return allElements.size();
 	}
+	public eqel at(int i){
+		return allElements.get(i);
+	}
 	public void display () {
 		for(int i=0;i<this.length();++i) {
 			allElements.get(i).display();

@@ -8,7 +8,7 @@ package equationsolving;
 
 public class PieceList {
 	
-	public static final int dcount = 100;
+	public static final int dcount = 1000;
 	Piece[] database = new Piece[dcount];
 	int counter = 0;
 	

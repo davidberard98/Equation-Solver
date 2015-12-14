@@ -19,6 +19,7 @@ public class EquationSolving {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        
         Scanner scanner = new Scanner( System.in );
         System.out.print("Your numeric equation: ");
         String input = scanner.nextLine();
@@ -193,9 +194,13 @@ public class EquationSolving {
 		return output;
 	}
 	
-	public static void reviewParse(int mainid, PieceList pls)
+	public static void reviewParse(List<String> parts)
 	{
-		// Clarify/ease of use in: ln, log, power
+		for(int i=0;i<parts.size();++i)
+		{
+			
+		}
+		
 	}
 
     

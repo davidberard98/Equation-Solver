@@ -4,6 +4,9 @@ javac -sourcepath src -d build/ src/*.java
 java -cp build/ equationsolving.EquationSolving
 ```
 
+==Use==
+-Currently, do not type *- eg. "4*-2".  Instead, type 4*(-2).
+
 ===Ideas===
 - Order of operations.  Once we have no parentheses, then we should try to:
 	* Turn logs, exponents, factorials into new Pieces
@@ -19,3 +22,5 @@ I should redo it so that it goes from List<String> -> List<eqel> before being sp
 That way, it'll be easier to insert parentheses around ln, etc...
 
 ... NEVER MIND! 
+
+Compress "multiplyCheck" "logCheck" etc into a single generic function

@@ -202,7 +202,20 @@ public class EquationSolving {
 		findInvolved(involved, mainid, pls);
 		System.out.println("::::length " + involved.size());
 		for(int i=0;i<involved.size();++i)
-			logCheck(involved.get(i), pls);
+			implyMultiply(involved.get(i), pls);
+		
+		for(int i=0;i<involved.size();++i)
+			factorialCheck(involved, involved.get(i), pls);
+		for(int i=0;i<involved.size();++i)
+			factorialCheck(involved, involved.get(i), pls);
+		for(int i=0;i<involved.size();++i)
+			logCheck(involved, involved.get(i), pls);
+		for(int i=0;i<involved.size();++i)
+			powerCheck(involved, involved.get(i), pls);
+		//for(int i=0;i<involved.size();++i) // CURRENTLY DOESN'T DO ANYTHING USEFUL
+		//	subtractCheck(involved, involved.get(i), pls);
+		for(int i=0;i<involved.size();++i)
+			multiplyCheck(involved, involved.get(i), pls);
 	}
 	
 	public static void findInvolved(List<Integer> involved, int mainid, PieceList pls)
@@ -217,9 +230,32 @@ public class EquationSolving {
 		}
 	}
 	
-	public static List<Integer> logCheck(int mainid, PieceList pls)
+	public static void factorialCheck(List<Integer> inuse, int mainid, PieceList pls)
 	{
-		List<Integer> newpieces = new ArrayList<>();
+		Piece tpiece = pls.at(mainid);
+		int factorialcount = 0;
+		for(int i=0;i<tpiece.length();++i)
+		{
+			//System.out.println("    " + ((int) tpiece.at(i).otherValue) + " vs "  + ((int) eqel.naturallog) + " & " + ((int) eqel.log));
+			if(tpiece.at(i).type == eqel.operatorType && tpiece.at(i).otherValue == eqel.factorial) {
+				++factorialcount;
+			}
+		}
+		if(factorialcount > 0 && tpiece.length() > 2)
+		{
+			for(int i=1;i<tpiece.length();++i)
+			{
+				if(tpiece.at(i).type == eqel.operatorType && tpiece.at(i).otherValue == eqel.factorial) {
+					int newid = repackage(tpiece, pls, i-1, i);
+					inuse.add(newid);
+					--i;
+				}
+			}
+		}
+	}
+	
+	public static void logCheck(List<Integer> inuse, int mainid, PieceList pls)
+	{
 		Piece tpiece = pls.at(mainid);
 		int logcount = 0;
 		for(int i=0;i<tpiece.length();++i)
@@ -238,31 +274,16 @@ public class EquationSolving {
 				if(tpiece.at(i).type == eqel.operatorType && tpiece.length() > i+1
 				&& (tpiece.at(i).otherValue == eqel.naturallog || tpiece.at(i).otherValue == eqel.log)) 
 				{
-					eqel function = tpiece.at(i);
-					eqel xval = tpiece.at(i+1);
-					
-					int newid = pls.add();
-					Piece replacement = pls.at(newid);
-					replacement.add(function);
-					replacement.add(xval);
-					
-					tpiece.allElements.remove(i);
-					tpiece.allElements.remove(i);
-					
-					eqel pieceElement = new eqel(newid, eqel.pieceType);
-					tpiece.allElements.add(i, pieceElement);
-					
-					newpieces.add(newid);
+					int newid = repackage(tpiece, pls, i, i+1);
+					inuse.add(newid);
 				}
 			}
 			
 		}
-		return newpieces;
 	}
 	
-	public static List<Integer> powerCheck(int mainid, PieceList pls)
+	public static void powerCheck(List<Integer> inuse, int mainid, PieceList pls)
 	{
-		List<Integer> newpieces = new ArrayList<>();
 		Piece tpiece = pls.at(mainid);
 		int powercount = 0;
 		for(int i=0;i<tpiece.length();++i)
@@ -272,9 +293,100 @@ public class EquationSolving {
 		}
 		if(powercount > 0 && tpiece.length() > 3)
 		{
-			// stuff..
+			for(int i=0;i<tpiece.length();++i)
+			{
+				if(tpiece.at(i).type == eqel.operatorType && tpiece.at(i).otherValue == eqel.power 
+				&& i > 0 && tpiece.length() > i+1)
+				{
+					int newid = repackage(tpiece, pls, i-1,i+1);
+					inuse.add(newid);
+					--i;
+				}
+			}
 		}
-		return newpieces;
+	}
+	
+	public static void implyMultiply(int mainid, PieceList pls)
+	{
+		Piece tpiece = pls.at(mainid);
+		for(int i=0;i<tpiece.length()-1;++i)
+		{ // look at each pair...
+			if(canImplyMult(tpiece.at(i).type) && canImplyMult(tpiece.at(i+1).type))
+			{
+				eqel multiplyOperator = new eqel(new String("*"));
+				tpiece.allElements.add(i+1, multiplyOperator);
+			}
+		}
+	}
+	
+	public static boolean canImplyMult(char type)
+	{
+		if(type == eqel.numberType || type == eqel.variableType 
+		|| type == eqel.pieceType || type == eqel.constantType)
+			return true;
+		return false;
+	}
+	
+	public static void multiplyCheck(List<Integer> inuse, int mainid, PieceList pls)
+	{ // AND Divide
+		Piece tpiece = pls.at(mainid);
+		int mdcount = 0;
+		for(int i=0;i<tpiece.length();++i)
+		{
+			// eg a[*]b
+			if(tpiece.at(i).type == eqel.operatorType
+			&& (tpiece.at(i).otherValue == eqel.multiply || tpiece.at(i).otherValue == eqel.divide))
+				++mdcount;
+		}
+		if(mdcount > 0 && tpiece.length() > 3)
+		{
+			for(int i=1;i<tpiece.length()-1;++i)
+			{
+				if(tpiece.at(i).type == eqel.operatorType
+				&& (tpiece.at(i).otherValue == eqel.multiply || tpiece.at(i).otherValue == eqel.divide))
+				{
+					int newid = repackage(tpiece, pls, i-1, i+1);
+					--i;
+					inuse.add(newid);
+				}
+			}
+		}
+	}
+	
+	public static void subtractCheck(List<Integer> inuse, int mainid, PieceList pls)
+	{ //DIFFERENT: checking for operator followed by -, or - at beginning.
+		Piece tpiece = pls.at(mainid);
+		//FIRST: check for - at beginning.
+		if(tpiece.at(0).type == eqel.operatorType && tpiece.at(0).type == eqel.minus)
+			tpiece.allElements.add(0, new eqel(0.0));
+		//NEXT: check for - after power.
+		for(int i=1;i<tpiece.length()-1;++i)
+		{
+			if(tpiece.at(i).type == eqel.operatorType && tpiece.at(i).type == eqel.minus
+			&& tpiece.at(i-1).type == eqel.operatorType)
+			{
+				int newid = repackage(tpiece, pls, i, i+1);
+				inuse.add(newid);
+			}
+		}
+	}
+	
+	public static int repackage(Piece subject, PieceList pls, int begin, int end)
+	{ // INCLUSIVE of both begin & end.
+		if(subject.length() > end && subject.length() > begin && end >= begin)
+		{
+			int newid = pls.add();
+			Piece newpiece = pls.at(newid);
+			eqel replacement = new eqel(newid, eqel.pieceType);
+			for(int i=begin;i<=end;++i) // transfer elements from subject to newpiece
+			{
+				newpiece.add(subject.at(begin));
+				subject.allElements.remove(begin);
+			}
+			subject.allElements.add(begin, replacement);
+			return newid;
+		}
+		return -1;
 	}
 
     

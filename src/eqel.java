@@ -210,6 +210,33 @@ public class eqel {
 		}
 		return ' ';
 	}
+	
+	public double evaluate(char operatorType, double... numbers)
+	{
+		if(operatorType == plus)
+		{
+			if(numbers.length > 1)
+				return (numbers[0] + numbers[1]);
+		}
+		if(operatorType == minus)
+		{
+			if(numbers.length > 1)
+				return (numbers[0] - numbers[1]);
+			else
+				return (-numbers[0]);
+		}
+		if(operatorType == multiply)
+		{
+			if(numbers.length > 1)
+				return (numbers[0] * numbers[1]);
+		}
+		if(operatorType == divide)
+		{
+			if(numbers.length > 1)
+				return (numbers[0] / numbers[1]);
+		}
+		return -1.0;
+	}
     
     
     public void display() {

@@ -39,4 +39,9 @@ public class Piece {
 		this.notes = input.notes;
 	}
 	
+	public double evaluate()
+	{
+		
+	}
+	
 }

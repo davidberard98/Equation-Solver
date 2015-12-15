@@ -17,3 +17,5 @@ java -cp build/ equationsolving.EquationSolving
 I should redo it so that it goes from List<String> -> List<eqel> before being split into Pieces.
 
 That way, it'll be easier to insert parentheses around ln, etc...
+
+... NEVER MIND! 

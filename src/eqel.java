@@ -82,11 +82,11 @@ public class eqel {
             type = operatorType;
             otherValue=divide;
         }
-        else if(input.equals("(")) {
+        else if(input.equals("(") || input.equals("{") || input.equals("[")) {
             type = operatorType;
             otherValue=lparen;
         }
-        else if(input.equals(")")) {
+        else if(input.equals(")") || input.equals("}") || input.equals("]")) {
             type = operatorType;
             otherValue=rparen;
         }

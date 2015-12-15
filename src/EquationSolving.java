@@ -37,7 +37,9 @@ public class EquationSolving {
         System.out.println(alleq.at(id).length() + "\n\n");
         
         List<String> parts = basicParse(input);
-        parse(parts, alleq);
+        int mainid = parse(parts, alleq);
+        
+        orderParse(mainid, alleq);
         
         alleq.display();
     }
@@ -194,13 +196,85 @@ public class EquationSolving {
 		return output;
 	}
 	
-	public static void reviewParse(List<String> parts)
+	public static void orderParse(int mainid, PieceList pls)
 	{
-		for(int i=0;i<parts.size();++i)
+		List<Integer> involved = new ArrayList<>();
+		findInvolved(involved, mainid, pls);
+		System.out.println("::::length " + involved.size());
+		for(int i=0;i<involved.size();++i)
+			logCheck(involved.get(i), pls);
+	}
+	
+	public static void findInvolved(List<Integer> involved, int mainid, PieceList pls)
+	{
+		Piece tpiece = pls.at(mainid);
+		involved.add(mainid);
+		for(int i=0;i<tpiece.length();++i)
 		{
+			if(tpiece.at(i).type == eqel.pieceType) {
+				findInvolved(involved, tpiece.at(i).pieceLocation, pls);
+			}
+		}
+	}
+	
+	public static List<Integer> logCheck(int mainid, PieceList pls)
+	{
+		List<Integer> newpieces = new ArrayList<>();
+		Piece tpiece = pls.at(mainid);
+		int logcount = 0;
+		for(int i=0;i<tpiece.length();++i)
+		{
+			//System.out.println("    " + ((int) tpiece.at(i).otherValue) + " vs "  + ((int) eqel.naturallog) + " & " + ((int) eqel.log));
+			if(tpiece.at(i).type == eqel.operatorType 
+			&& (tpiece.at(i).otherValue == eqel.naturallog || tpiece.at(i).otherValue == eqel.log)) {
+				++logcount;
+			}
+		}
+		if(logcount > 0 && tpiece.length() > 2) 
+		{ // if() is to prevent recursion when you have something already separated.
+			
+			for(int i=0;i<tpiece.length();++i) 
+			{
+				if(tpiece.at(i).type == eqel.operatorType && tpiece.length() > i+1
+				&& (tpiece.at(i).otherValue == eqel.naturallog || tpiece.at(i).otherValue == eqel.log)) 
+				{
+					eqel function = tpiece.at(i);
+					eqel xval = tpiece.at(i+1);
+					
+					int newid = pls.add();
+					Piece replacement = pls.at(newid);
+					replacement.add(function);
+					replacement.add(xval);
+					
+					tpiece.allElements.remove(i);
+					tpiece.allElements.remove(i);
+					
+					eqel pieceElement = new eqel(newid, eqel.pieceType);
+					tpiece.allElements.add(i, pieceElement);
+					
+					newpieces.add(newid);
+				}
+			}
 			
 		}
-		
+		return newpieces;
+	}
+	
+	public static List<Integer> powerCheck(int mainid, PieceList pls)
+	{
+		List<Integer> newpieces = new ArrayList<>();
+		Piece tpiece = pls.at(mainid);
+		int powercount = 0;
+		for(int i=0;i<tpiece.length();++i)
+		{
+			if(tpiece.at(i).type == eqel.operatorType && tpiece.at(i).otherValue == eqel.power)
+				++ powercount;
+		}
+		if(powercount > 0 && tpiece.length() > 3)
+		{
+			// stuff..
+		}
+		return newpieces;
 	}
 
     

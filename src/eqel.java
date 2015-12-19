@@ -8,6 +8,7 @@ package equationsolving;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.lang.Math;
 
 
 public class eqel { 
@@ -25,7 +26,7 @@ public class eqel {
     public static final char equal = 7;
     public static final char factorial = 8;
     public static final char power = 9;
-    public static final char log = 10;
+    public static final char logten = 10;
     public static final char naturallog = 11;
     
     public static final char validOperator = 1;
@@ -104,7 +105,7 @@ public class eqel {
 		}
 		else if(input.equals("log")) {
 			type = operatorType;
-			otherValue=log;
+			otherValue=logten;
 		}
 		else if(input.equals("ln")) {
 			type = operatorType;
@@ -211,31 +212,62 @@ public class eqel {
 		return ' ';
 	}
 	
-	public double evaluate(char operatorType, double... numbers)
+	public static double evaluate(char operatorType, double... numbers)
 	{
-		if(operatorType == plus)
+		if(operatorType == plus) // 2
 		{
 			if(numbers.length > 1)
 				return (numbers[0] + numbers[1]);
 		}
-		if(operatorType == minus)
+		else if(operatorType == minus) // 2
 		{
 			if(numbers.length > 1)
 				return (numbers[0] - numbers[1]);
 			else
 				return (-numbers[0]);
 		}
-		if(operatorType == multiply)
+		else if(operatorType == multiply)  // 2
 		{
 			if(numbers.length > 1)
 				return (numbers[0] * numbers[1]);
 		}
-		if(operatorType == divide)
+		else if(operatorType == divide) // 2
 		{
 			if(numbers.length > 1)
 				return (numbers[0] / numbers[1]);
 		}
+		else if(operatorType == factorial) // 1
+		{
+			if(numbers.length > 0)
+				return evaluateFactorial(numbers[0]);
+		}
+		else if(operatorType == power) // 2
+		{
+			if(numbers.length > 1)
+				return pow(numbers[0], numbers[1]);
+		}
+		else if(operatorType == naturallog) // 1
+		{
+			if(numbers.length > 0)
+				return log(number[0]);
+		}
+		else if(operatorType == logten) // 1
+		{
+			if(numbers.length > 0)
+				return log10(number[0]);
+		}
 		return -1.0;
+	}
+	
+	public double evaluateFactorial(double input)
+	{
+		int ival = (int) input;
+		int output = 1;
+		for(int i=1;i<=ival;++i)
+		{
+			output *= i;
+		}
+		return ((double) output);
 	}
     
     

@@ -6,9 +6,10 @@
 
 package equationsolving;
 
-public class Variable {
-	String name;
-	double value;
+public class Variable 
+{
+	public String name;
+	public double value;
 	public Variable() {}
 	public Variable(String nname) {name = nname;}
 	public Variable(String nname, double val) {name = nname; value = val}

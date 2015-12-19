@@ -236,7 +236,7 @@ public class EquationSolving {
 		int factorialcount = 0;
 		for(int i=0;i<tpiece.length();++i)
 		{
-			//System.out.println("    " + ((int) tpiece.at(i).otherValue) + " vs "  + ((int) eqel.naturallog) + " & " + ((int) eqel.log));
+			//System.out.println("    " + ((int) tpiece.at(i).otherValue) + " vs "  + ((int) eqel.naturallog) + " & " + ((int) eqel.logten));
 			if(tpiece.at(i).type == eqel.operatorType && tpiece.at(i).otherValue == eqel.factorial) {
 				++factorialcount;
 			}
@@ -260,9 +260,9 @@ public class EquationSolving {
 		int logcount = 0;
 		for(int i=0;i<tpiece.length();++i)
 		{
-			//System.out.println("    " + ((int) tpiece.at(i).otherValue) + " vs "  + ((int) eqel.naturallog) + " & " + ((int) eqel.log));
+			//System.out.println("    " + ((int) tpiece.at(i).otherValue) + " vs "  + ((int) eqel.naturallog) + " & " + ((int) eqel.logten));
 			if(tpiece.at(i).type == eqel.operatorType 
-			&& (tpiece.at(i).otherValue == eqel.naturallog || tpiece.at(i).otherValue == eqel.log)) {
+			&& (tpiece.at(i).otherValue == eqel.naturallog || tpiece.at(i).otherValue == eqel.logten)) {
 				++logcount;
 			}
 		}
@@ -272,7 +272,7 @@ public class EquationSolving {
 			for(int i=0;i<tpiece.length();++i) 
 			{
 				if(tpiece.at(i).type == eqel.operatorType && tpiece.length() > i+1
-				&& (tpiece.at(i).otherValue == eqel.naturallog || tpiece.at(i).otherValue == eqel.log)) 
+				&& (tpiece.at(i).otherValue == eqel.naturallog || tpiece.at(i).otherValue == eqel.logten)) 
 				{
 					int newid = repackage(tpiece, pls, i, i+1);
 					inuse.add(newid);

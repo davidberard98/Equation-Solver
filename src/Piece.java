@@ -142,10 +142,150 @@ public class Piece {
 		{ // Dealing with + and -.
 			return roPlusMinus(orderedOperations, pls, location);
 		}
+		if(this.findEqel(new eqel("*")) != -1)
+		{
+			return roMultiply(orderedOperations, pls, location);
+		}
+		if(this.findEqel(new eqel("/")) != -1)
+		{
+			return roDivide(orderedOperations, pls, location);
+		}
+		if(this.findEqel(new eqel("ln")) != -1 || this.findEqel(new eqel("log")) != -1)
+		{
+			return roLogs(orderedOperations, pls, location);
+		}
+		if(this.findEqel(new eqel("^")) != -1)
+		{
+			return roPower(orderedOperations, pls, location);
+		}
 		else
 		{
 			System.out.println("::Piece.reverseOperations - NO + or -");
 		}
+		return 1;
+	}
+	
+	public int roPower(List<Piece> orderedOperations, PieceList pls, int location)
+	{
+		if(this.length() != 3)
+			return -1;
+		if(this.at(1).otherValue != eqel.power)
+			return -1;
+		if(location == 0) // THIS^b
+		{
+			// Reverse will be ^(1/b) so repackage (1/b) as [#] = (1/b) (a piece) and put ^[#]
+			eqel other = this.at(2);
+			Piece rev = new Piece();
+			eqel op = new eqel("^");
+			int newid = pls.add();
+			Piece newpiece = pls.at(newid);
+			newpiece.add(new eqel(1.0));
+			newpiece.add(new eqel("/"));
+			newpiece.add(other);
+			eqel newPieceEqel = new eqel(newid, eqel.pieceType);
+			
+			rev.add(op);
+			rev.add(newPieceEqel);
+			orderedOperations.add(rev);
+		}
+		else if(location == 2) // b^THIS.
+		{ 
+			//Reverse will be log(OTHER)/log(b).  Repackage [#] = log(b) and put {log}, {/[#]}
+			eqel other = this.at(0);
+			Piece logop = new Piece();
+			logop.add(new eqel("log"));
+			
+			Piece divop = new Piece();
+			int newid = pls.add();
+			Piece newpiece = pls.at(newid);
+			newpiece.add(new eqel("log"));
+			newpiece.add(other);
+			eqel newPieceEqel = new eqel(newid, eqel.pieceType);
+			divop.add(new eqel("/"));
+			divop.add(newPieceEqel);
+			
+			orderedOperations.add(logop);
+			if(!(other.type == eqel.numberType && other.numberValue == 10.0))
+				orderedOperations.add(divop);
+		}
+		
+		return 1;
+	}
+	
+	public int roLogs(List<Piece> orderedOperations, PieceList pls, int location)
+	{
+		if(this.length() != 2)
+			return -1;
+		if(this.at(0).otherValue != eqel.logten && this.at(0).otherValue != eqel.naturallog)
+			return -1;
+		eqel base = null;
+		eqel op = new eqel("^");
+		if(this.at(0).otherValue == eqel.logten)
+		{
+			base = new eqel(10.0);
+		}
+		else if(this.at(0).otherValue == eqel.naturallog)
+		{
+			base = new eqel("e", pls.constants);
+		}
+		Piece rev = new Piece();
+		rev.add(base);
+		rev.add(op);
+		orderedOperations.add(rev);
+		
+		return 1;
+	}
+	
+	public int roDivide(List<Piece> orderedOperations, PieceList pls, int location)
+	{// Assumes a/b is all
+		if(this.length() != 3 || (this.length() > 2 && this.at(2).otherValue != eqel.divide) || location%2 != 0) {
+			System.out.println("ERROR: Divide operator with incorrect number/order of eqel elements");
+			return -1;
+		}
+		eqel other = null;
+		if(location == 0) // THIS/b
+		{
+			other = this.at(2);
+			Piece undo = new Piece();
+			undo.add(new eqel("*"));
+			undo.add(other);
+			orderedOperations.add(undo);
+		}
+		else if(location == 2) // b/THIS
+		{
+			other = this.at(0);
+			Piece flip = new Piece();
+			Piece isolate = new Piece();
+			flip.add(new eqel(1.0));
+			flip.add(new eqel("/"));
+			isolate.add(new eqel("*"));
+			isolate.add(other);
+			orderedOperations.add(flip);
+			orderedOperations.add(isolate);
+		}
+		
+		return 1;
+	}
+	
+	public int roMultiply(List<Piece> orderedOperations, PieceList pls, int location)
+	{ // assumes "a*b" is all
+		eqel other = null;
+		for(int i=0;i<this.length();++i)
+		{
+			if(this.at(i).type != eqel.operatorType && i != location)
+			{
+				other = this.at(i);
+			}
+		}
+		if(other != null)
+		{
+			Piece unmultiply = new Piece();
+			unmultiply.add(new eqel("/"));
+			unmultiply.add(other);
+			orderedOperations.add(unmultiply);
+		}
+		else
+			return -1;
 		return 1;
 	}
 	
@@ -159,7 +299,7 @@ public class Piece {
 		int specialpiece = -1;
 		for(int i=0;i<this.length();++i)
 		{
-			if(this.at(i).type == eqel.operatorType)
+			if(this.at(i).type == eqel.operatorType && current.length() > 0)
 			{
 				splitUp.add(current);
 				current = new Piece();

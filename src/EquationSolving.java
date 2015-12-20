@@ -93,6 +93,7 @@ public class EquationSolving {
 		for(int i=0;i<ops.size();++i)
 		{
 			ops.get(i).display();
+			System.out.println();
 		}
 		
     }

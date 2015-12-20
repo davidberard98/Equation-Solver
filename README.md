@@ -16,7 +16,6 @@ java -cp build/ equationsolving.EquationSolving
 ===Future functions===
 - +, -, *, /; logs, exponents, powers.
 - constants including pi, e...!!! This is type 8! <span style="font-weight:900;color:green;">DONE</span>
-- <span style="font-weight:900;color:red;">NEED TO UNDERSTAND SCIENTIFIC NOTATION "E"</span>
 
 ==REDO==
 I should redo it so that it goes from List<String> -> List<eqel> before being split into Pieces.

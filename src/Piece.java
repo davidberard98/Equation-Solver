@@ -104,7 +104,114 @@ public class Piece {
 			output = pls.at(this.at(loc).pieceLocation).evaluate(varvals, pls);
 			
 		return output;
-						
+	}
+	
+	public int eqelContaining(PieceList pls, String varname)
+	{
+		for(int i=0;i<this.length();++i) // first, non-recursive check
+		{
+			if(this.at(i).type == eqel.variableType && this.at(i).name.equals(varname))
+				return i;
+		}
+		for(int i=0;i<this.length();++i)
+		{
+			if(this.at(i).type == eqel.pieceType)
+			{
+				int result = pls.at(this.at(i).pieceLocation).eqelContaining(pls, varname);
+				if(result != -1)
+					return i;
+			}
+		}
+		return -1;
+	}
+	
+	public int findEqel(eqel input)
+	{
+		for(int i=0;i<this.length();++i)
+		{
+			if(this.at(i).equals(input))
+				return i;
+		}
+		return -1;
+	}
+	
+	public int reverseOperations(List<Piece> orderedOperations, PieceList pls, String chosenVar)
+	{ // location being the eqel# where the var resides
+		int location = this.eqelContaining(pls, chosenVar);
+		if(this.findEqel(new eqel("+")) != -1 || this.findEqel(new eqel("-")) != -1)
+		{ // Dealing with + and -.
+			return roPlusMinus(orderedOperations, pls, location);
+		}
+		else
+		{
+			System.out.println("::Piece.reverseOperations - NO + or -");
+		}
+		return 1;
+	}
+	
+	public int roPlusMinus(List<Piece> orderedOperations, PieceList pls, int location)
+	{
+		// Split up into sections.  For example, with special b: a + b - c - d
+		// {a}, {+b}, {-c}, {-d}.
+		// That way
+		List<Piece> splitUp = new ArrayList<>(); 
+		Piece current = new Piece();
+		int specialpiece = -1;
+		for(int i=0;i<this.length();++i)
+		{
+			if(this.at(i).type == eqel.operatorType)
+			{
+				splitUp.add(current);
+				current = new Piece();
+			}
+			if(i==location)
+				specialpiece = splitUp.size();
+			current.add(this.at(i));
+		}
+		if(current.length() > 0)
+			splitUp.add(current);
+			
+		System.out.println("::Piece.roPlusMinus().  splitUp.size() = " + splitUp.size() + ", specialpiece=" + specialpiece);
+		
+		// Splitting into sections complete.  Now, convert sections into operations.
+		for(int i=0;i<splitUp.size();++i)
+		{
+			if(i == specialpiece)
+				continue;
+			if(splitUp.get(i).length() > 2 || splitUp.get(i).length() == 0)
+				return -1;
+			if(splitUp.get(i).length() == 1) {
+				splitUp.get(i).allElements.add(0, new eqel("+"));
+			}
+			if(splitUp.get(i).at(0).type != eqel.operatorType)
+				return -1;
+			
+			//Actual creation of operations
+			Piece nextOperator = new Piece();
+			if(splitUp.get(i).at(0).otherValue == eqel.plus)
+			{
+				nextOperator.add(new eqel("-"));
+				nextOperator.add(splitUp.get(i).at(1));
+			}
+			else // for -(thing)
+			{
+				nextOperator.add(new eqel("+"));
+				nextOperator.add(splitUp.get(i).at(1));
+			}
+			orderedOperations.add(nextOperator);
+		}
+		// IF this special part is negative, then a *-1.
+		if(splitUp.get(specialpiece).at(0).otherValue == eqel.minus)
+		{
+			Piece revsign = new Piece();
+			double minusoned = -1.0;
+			eqel minusonee = new eqel(minusoned);
+			revsign.add(new eqel("*"));
+			revsign.add(minusonee);
+			orderedOperations.add(revsign);
+		}
+		
+		return 1;
 	}
 	
 }

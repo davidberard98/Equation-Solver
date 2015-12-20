@@ -44,7 +44,8 @@ public class EquationSolving {
         
         alleq.display();
         
-        //SOLVING WITH VARIABLES
+        /*
+        //EVALUATING WITH VARIABLES
         List<Variable> varlist = new ArrayList<>();
         findVariables(varlist, mainid, alleq);
         for(int i=0;i<varlist.size();++i) // fill values
@@ -56,6 +57,43 @@ public class EquationSolving {
 		}
 		double finalval = alleq.at(mainid).evaluate(varlist, alleq);
 		System.out.println("Value is " + finalval);
+		*/
+		
+		//SOLVING FOR VARIABLE
+		List<Variable> varlist = new ArrayList<>();
+        findVariables(varlist, mainid, alleq);
+        
+		System.out.print("Variables include ");
+		for(int i=0;i<varlist.size();++i)
+		{
+			System.out.print(varlist.get(i).name + " ");
+		}
+		System.out.print("\nSolve for which one? ");
+		String chosenVar = scanner.nextLine();
+
+		int nextid = mainid;
+		while(nextid > -1)
+		{
+			int loccontaining = alleq.at(nextid).eqelContaining(alleq, chosenVar);
+			System.out.println("From piece " + nextid + ", eqel #" + loccontaining + " has the variable " + chosenVar + ".  It is a " + alleq.at(nextid).at(loccontaining).value());
+			if(alleq.at(nextid).at(loccontaining).type == eqel.pieceType)
+			{
+				nextid = alleq.at(nextid).at(loccontaining).pieceLocation;
+			}
+			else
+				nextid = -1;
+		}
+		
+		// TESTING THE REVERSE OPERATIONS..
+		List<Piece> ops = new ArrayList<>();
+		int output = alleq.at(mainid).reverseOperations(ops, alleq, chosenVar);
+		if(output == -1)
+			System.out.println("ERROR REVERSING OPERATION!");
+		System.out.println(ops.size());
+		for(int i=0;i<ops.size();++i)
+		{
+			ops.get(i).display();
+		}
 		
     }
     
@@ -68,10 +106,18 @@ public class EquationSolving {
 		{
 			int ttype = eqel.valtype(in.charAt(i));
 			if(ctype != 0 && ctype != ttype) {
-				if(ctype != eqel.whitespaceType) {
-					parts.add(current);
+				if(i > 0 && ctype == eqel.numberType 
+				&& ((in.charAt(i) == '-' && in.charAt(i-1) == 'E') || (in.charAt(i) == 'E')) )
+				{
+					ttype = eqel.numberType;
 				}
-				current = "";
+				else
+				{
+					if(ctype != eqel.whitespaceType) {
+						parts.add(current);
+					}
+					current = "";
+				}
 			}
 			current += in.charAt(i);
 			ctype = ttype;

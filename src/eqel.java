@@ -12,9 +12,9 @@ import java.lang.Math;
 
 
 public class eqel { 
-    char type;
-    double numberValue;
-    char otherValue;
+    char type = 28;
+    double numberValue = -12345;
+    char otherValue = 28;
     int pieceLocation = -1;
     String name;
     public static final char plus = 1;
@@ -194,7 +194,7 @@ public class eqel {
 			return whitespaceType;
 		else if( input == 40 || input == 41 || input == 123 || input == 125 || input == 91 || input == 93 )
 			return parenType;
-		else if( input == 46 || (48 <= input && input <= 57) )
+		else if( input == 46 || (48 <= input && input <= 57))
 			return numberType;
 		else if( input == 61 )
 			return equalType;
@@ -294,6 +294,15 @@ public class eqel {
 			output *= i;
 		}
 		return ((double) output);
+	}
+	
+	public boolean equals(eqel input)
+	{
+		if(input.type == type && input.otherValue == otherValue 
+		&& ((input.name != null && name != null && input.name.equals(name)) || (input.name == null && name == null))
+		&& input.numberValue == numberValue && input.pieceLocation == pieceLocation)
+			return true;
+		return false;
 	}
     
     

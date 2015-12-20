@@ -41,27 +41,47 @@ public class Piece {
 	
 	public double evaluate(List<Variable> varvals, PieceList pls)
 	{
+		double output = 0;
 		for(int i=0;i<this.length();++i)
 		{
 			eqel element = this.at(i);
-			if(element.type == eqel.operator)
+			if(element.type == eqel.numberType || element.type == eqel.constantType)
 			{
-				if((element.otherValue == eqel.plus || element.otherValue == eqel.multiply
-				|| eqel.otherValue == eqel.divide || element.otherValue == eqel.power) 
-				&& i < this.length()-1 && i > 0) // a(operator)b format, no minus
+				output = element.numberValue;
+			}
+			else if(element.type == eqel.pieceType)
+			{
+				output = pls.at(element.pieceLocation).evaluate(varvals, pls);
+			}
+			else if(element.type == eqel.operatorType)
+			{
+				if((element.otherValue == eqel.plus || element.otherValue == eqel.minus 
+				|| element.otherValue == eqel.multiply || element.otherValue == eqel.divide 
+				|| element.otherValue == eqel.power) && i < this.length()-1) 
 				{
-					double a = findPart(varvals, pls, i-1);
 					double b = findPart(varvals, pls, i+1);
 					char operation = element.otherValue;
-					eqel.evaluate(operation, a, b);
+					output = eqel.evaluate(operation, output, b);
+					++i;
+				}
+				else if(element.otherValue == eqel.factorial)
+				{
+					output = eqel.evaluate(eqel.factorial, output);
+				}
+				else if((element.otherValue == eqel.logten || element.otherValue == eqel.naturallog) && i<this.length()-1)
+				{
+					double a = findPart(varvals, pls, i+1);
+					output = eqel.evaluate(element.otherValue, a);
+					++i;
 				}
 			}
 		}
+		return output;
 	}
 	
 	public double findPart(List<Variable> varvals, PieceList pls, int loc)
 	{
-		double output;
+		double output = 0;
 					
 		if(this.at(loc).type == eqel.numberType)
 			output = this.at(loc).numberValue;

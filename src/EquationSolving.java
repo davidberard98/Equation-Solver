@@ -24,24 +24,27 @@ public class EquationSolving {
         System.out.print("Your numeric equation: ");
         String input = scanner.nextLine();
         PieceList alleq = new PieceList();
-        int id = alleq.add();
-        eqel abc = new eqel("a");
-        Piece tpiece = alleq.at(id);
         
-        tpiece.add(abc);
-        System.out.println(tpiece.length());
-        tpiece.add(abc);
-        System.out.println(tpiece.length());
-        tpiece = null;
-        
-        System.out.println(alleq.at(id).length() + "\n\n");
-        
+        // PARSE THE INPUT
         List<String> parts = basicParse(input);
         int mainid = parse(parts, alleq);
         
         orderParse(mainid, alleq);
         
         alleq.display();
+        
+        //SOLVING WITH VARIABLES
+        List<Variable> varlist = new ArrayList<>();
+        findVariables(varlist, mainid, alleq);
+        for(int i=0;i<varlist.size();++i) // fill values
+        {
+			System.out.print("Define " + varlist.get(i).name + ":");
+			String sval = scanner.nextLine();
+			double dval = Double.parseDouble(sval);
+			varlist.get(i).value = dval;
+		}
+		double finalval = alleq.at(mainid).evaluate(varlist, alleq);
+		System.out.println("Value is " + finalval);
     }
     
     public static List<String> basicParse(String in)
@@ -387,6 +390,18 @@ public class EquationSolving {
 			return newid;
 		}
 		return -1;
+	}
+	
+	public static void findVariables(List<Variable> varlist, int mainid, PieceList pls)
+	{
+		Piece tpiece = pls.at(mainid);
+		for(int i=0;i<tpiece.length();++i)
+		{
+			if(tpiece.at(i).type == eqel.pieceType)
+				findVariables(varlist, tpiece.at(i).pieceLocation, pls);
+			else if(tpiece.at(i).type == eqel.variableType)
+				varlist.add(new Variable(tpiece.at(i).name));
+		}
 	}
 
     

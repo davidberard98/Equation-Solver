@@ -244,22 +244,22 @@ public class eqel {
 		else if(operatorType == power) // 2
 		{
 			if(numbers.length > 1)
-				return pow(numbers[0], numbers[1]);
+				return Math.pow(numbers[0], numbers[1]);
 		}
 		else if(operatorType == naturallog) // 1
 		{
 			if(numbers.length > 0)
-				return log(number[0]);
+				return Math.log(numbers[0]);
 		}
 		else if(operatorType == logten) // 1
 		{
 			if(numbers.length > 0)
-				return log10(number[0]);
+				return Math.log10(numbers[0]);
 		}
 		return -1.0;
 	}
 	
-	public double evaluateFactorial(double input)
+	public static double evaluateFactorial(double input)
 	{
 		int ival = (int) input;
 		int output = 1;

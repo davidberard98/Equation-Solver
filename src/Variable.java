@@ -12,6 +12,6 @@ public class Variable
 	public double value;
 	public Variable() {}
 	public Variable(String nname) {name = nname;}
-	public Variable(String nname, double val) {name = nname; value = val}
+	public Variable(String nname, double val) {name = nname; value = val;}
 	
 }

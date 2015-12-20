@@ -11,6 +11,10 @@ import java.util.List;
 import java.util.AbstractList;
 import java.util.Arrays;
 
+import org.w3c.dom.*;
+import javax.xml.parsers.*;
+import java.io.*;
+
 public class EquationSolving {
 
 	
@@ -24,6 +28,13 @@ public class EquationSolving {
         System.out.print("Your numeric equation: ");
         String input = scanner.nextLine();
         PieceList alleq = new PieceList();
+        
+        // READ CONSTANTS WITH XML FILE
+		List<Variable> allConstants = null;
+		allConstants = readXmlConstants("constants.xml");
+		// store constant list in PieceList, since that's basically the only universally
+		//   used object.
+		alleq.constants = allConstants;
         
         // PARSE THE INPUT
         List<String> parts = basicParse(input);
@@ -45,6 +56,7 @@ public class EquationSolving {
 		}
 		double finalval = alleq.at(mainid).evaluate(varlist, alleq);
 		System.out.println("Value is " + finalval);
+		
     }
     
     public static List<String> basicParse(String in)
@@ -193,7 +205,7 @@ public class EquationSolving {
 			}
 			else
 			{
-				eqel thisval = new eqel(parts.get(i));
+				eqel thisval = new eqel(parts.get(i), pls.constants);
 				output.add(thisval);
 			}
 		}
@@ -317,7 +329,7 @@ public class EquationSolving {
 		{ // look at each pair...
 			if(canImplyMult(tpiece.at(i).type) && canImplyMult(tpiece.at(i+1).type))
 			{
-				eqel multiplyOperator = new eqel(new String("*"));
+				eqel multiplyOperator = new eqel("*");
 				tpiece.allElements.add(i+1, multiplyOperator);
 			}
 		}
@@ -417,5 +429,34 @@ public class EquationSolving {
 		}
 	}
 
+	public static List<Variable> readXmlConstants(String filename)
+	{
+		List<Variable> varlist = new ArrayList<>();
+		
+		try{
+			File inputFile = new File(filename);
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			Document doc = dBuilder.parse(inputFile);
+			doc.getDocumentElement().normalize();
+			NodeList nList = doc.getElementsByTagName("constant");
+			for(int i=0;i<nList.getLength();++i)
+			{
+				Variable tvar = new Variable();
+				Node nNode = nList.item(i);
+				Element eElement = (Element) nNode;
+				tvar.name = eElement.getElementsByTagName("name").item(0).getTextContent();
+				String sval = eElement.getElementsByTagName("value").item(0).getTextContent();
+				tvar.value = Double.parseDouble(sval);
+				varlist.add(tvar);
+				varlist.get(i).display();
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return varlist;
+	}
     
 }

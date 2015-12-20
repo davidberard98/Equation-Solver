@@ -87,7 +87,7 @@ public class Piece {
 	{
 		double output = 0;
 					
-		if(this.at(loc).type == eqel.numberType)
+		if(this.at(loc).type == eqel.numberType || this.at(loc).type == eqel.constantType)
 			output = this.at(loc).numberValue;
 		else if(this.at(loc).type == eqel.variableType)
 		{

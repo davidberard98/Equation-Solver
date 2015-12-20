@@ -6,11 +6,16 @@
 
 package equationsolving;
 
+import java.util.ArrayList;
+import java.util.List;
+
+
 public class PieceList {
 	
 	public static final int dcount = 1000;
 	Piece[] database = new Piece[dcount];
 	int counter = 0;
+	public List<Variable> constants = new ArrayList<>();
 	
 	public PieceList () { }
 	

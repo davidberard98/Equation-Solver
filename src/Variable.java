@@ -13,5 +13,8 @@ public class Variable
 	public Variable() {}
 	public Variable(String nname) {name = nname;}
 	public Variable(String nname, double val) {name = nname; value = val;}
+	public void display() {
+		System.out.println(name + "=" + value);
+	}
 	
 }

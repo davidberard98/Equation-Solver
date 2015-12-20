@@ -11,10 +11,12 @@ java -cp build/ equationsolving.EquationSolving
 - Order of operations.  Once we have no parentheses, then we should try to:
 	* Turn logs, exponents, factorials into new Pieces
 	* Re-order to have no parentheses with arithmatic.
+- Use a more precise type of number instead of double, since it will be doing inefficient calculations (rounding repeatedly)
 
 ===Future functions===
 - +, -, *, /; logs, exponents, powers.
-- constants including pi, e...!!! This is type 8!
+- constants including pi, e...!!! This is type 8! <span style="font-weight:900;color:green;">DONE</span>
+- <span style="font-weight:900;color:red;">NEED TO UNDERSTAND SCIENTIFIC NOTATION "E"</span>
 
 ==REDO==
 I should redo it so that it goes from List<String> -> List<eqel> before being split into Pieces.

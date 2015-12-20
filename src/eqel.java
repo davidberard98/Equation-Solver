@@ -6,8 +6,8 @@
 
 package equationsolving;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
+import java.util.ArrayList;
+import java.util.List;
 import java.lang.Math;
 
 
@@ -58,11 +58,33 @@ public class eqel {
 		parseThing(input);
     }
     
+    public eqel(String input, List<Variable> constantlist) {
+		parseThing(input, constantlist);
+    }
+    
     public eqel(int input, char thisType) {
 		if(thisType == pieceType) {
 			pieceLocation = input;
 			type = thisType;
 		}
+	}
+	
+	public int parseThing(String input, List<Variable> constantlist)
+	{
+		int ptype = parseThing(input);
+		if(ptype == variableType)
+		{
+			for(int i=0;i<constantlist.size();++i)
+			{
+				if(constantlist.get(i).name.equals(name))
+				{
+					type = constantType;
+					numberValue = constantlist.get(i).value;
+					return constantType;
+				}
+			}
+		}
+		return ptype;
 	}
     
     public int parseThing(String input)
@@ -154,6 +176,10 @@ public class eqel {
         if(type == pieceType)
 		{
 			return "Piece, id " + Integer.toString(pieceLocation);
+		}
+		if(type == constantType)
+		{
+			return "Constant, " + name + " = " + Double.toString(numberValue);
 		}
         return "? " + Integer.toString(type) + " " + Integer.toString(otherValue) + "...";
     }

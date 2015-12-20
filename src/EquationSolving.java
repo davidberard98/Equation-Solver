@@ -126,6 +126,7 @@ public class EquationSolving {
 		{
 			Piece formatted = mainParse(parts, pls);  // split up
 			main.transfer(formatted);
+			main.id = mainid;
 			formatted = null;
 		}
 		
@@ -400,7 +401,19 @@ public class EquationSolving {
 			if(tpiece.at(i).type == eqel.pieceType)
 				findVariables(varlist, tpiece.at(i).pieceLocation, pls);
 			else if(tpiece.at(i).type == eqel.variableType)
-				varlist.add(new Variable(tpiece.at(i).name));
+			{
+				boolean fine = true;
+				for(int j=0;j<varlist.size();++j)
+				{
+					if(varlist.get(j).name.equals(tpiece.at(i).name))
+					{
+						fine = false;
+						break;
+					}
+				}
+				if(fine)
+					varlist.add(new Variable(tpiece.at(i).name));
+			}
 		}
 	}
 

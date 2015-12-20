@@ -53,6 +53,10 @@ public class Piece {
 			{
 				output = pls.at(element.pieceLocation).evaluate(varvals, pls);
 			}
+			else if(element.type == eqel.variableType)
+			{
+				output = this.findPart(varvals,pls, i);
+			}
 			else if(element.type == eqel.operatorType)
 			{
 				if((element.otherValue == eqel.plus || element.otherValue == eqel.minus 
@@ -89,7 +93,7 @@ public class Piece {
 		{
 			for(int k=0;k<varvals.size();++k)
 			{
-				if(varvals.get(k).name == this.at(loc).name)
+				if(varvals.get(k).name.equals(this.at(loc).name))
 				{
 					output = varvals.get(k).value;
 					break;

@@ -28,7 +28,7 @@ public class PieceList {
 	public void display() {
 		for(int i=0;i<counter;++i)
 		{
-			System.out.println("Piece " + i + ":");
+			System.out.println("Piece " + i + "(thinks " + database[i].id + ")" + ":");
 			database[i].display();
 			System.out.println();
 		}

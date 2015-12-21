@@ -5,7 +5,7 @@ java -cp build/ equationsolving.EquationSolving
 ```
 
 ==Use==
--Currently, do not type *- eg. "4*-2".  Instead, type 4*(-2).
+-Currently, do not type *- eg. "4 * - 2".  Instead, type 4*(-2).
 
 ===Ideas===
 - Order of operations.  Once we have no parentheses, then we should try to:

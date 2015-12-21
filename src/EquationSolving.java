@@ -85,16 +85,10 @@ public class EquationSolving {
 		}
 		
 		// TESTING THE REVERSE OPERATIONS..
-		List<Piece> ops = new ArrayList<>();
-		int output = alleq.at(mainid).reverseOperations(ops, alleq, chosenVar);
-		if(output == -1)
-			System.out.println("ERROR REVERSING OPERATION!");
-		System.out.println(ops.size());
-		for(int i=0;i<ops.size();++i)
-		{
-			ops.get(i).display();
-			System.out.println();
-		}
+		int solvedId = solveFor(alleq, mainid, chosenVar);
+		System.out.println("Solved For ID: " + solvedId);
+		
+		alleq.display();
 		
     }
     
@@ -505,5 +499,48 @@ public class EquationSolving {
 
 		return varlist;
 	}
+	
+	public static int solveFor(PieceList pls, int mainid, String varname)
+	{
+		int equalLocation = pls.at(mainid).findEqel(new eqel("="));
+		if(equalLocation != 1)
+			return -1;
+		int varLoc = pls.at(mainid).eqelContaining(pls, varname);
+		if(varLoc %2 != 0)
+			return -1;
+		
+		Piece varSide = null;
+		Piece otherSide = null;
+		if(varLoc == 0)
+		{
+			varSide = pls.at(pls.at(mainid).at(0).pieceLocation);
+			otherSide = pls.at(pls.at(mainid).at(2).pieceLocation);
+		}
+		else if(varLoc == 2)
+		{
+			varSide = pls.at(pls.at(mainid).at(2).pieceLocation);
+			otherSide = pls.at(pls.at(mainid).at(0).pieceLocation);
+		}
+		
+		List<Piece> ops = new ArrayList<>();
+		varSide.reverseOperations(ops, pls, varname);
+		int newOtherId = otherSide.reverseImplement(ops, pls);
+		eqel newOtherContainer = new eqel(newOtherId, eqel.pieceType);
+		
+		int varOnlyId = pls.add();
+		Piece varOnly = pls.at(varOnlyId);
+		varOnly.add(new eqel(varname));
+		eqel vocontainer = new eqel(varOnlyId, eqel.pieceType);
+		
+		int finalId = pls.add();
+		Piece finalP = pls.at(finalId);
+		finalP.add(vocontainer);
+		finalP.add(new eqel("="));
+		finalP.add(newOtherContainer);
+		
+		return finalId;
+	}
+	
+	
     
 }

@@ -138,30 +138,49 @@ public class Piece {
 	public int reverseOperations(List<Piece> orderedOperations, PieceList pls, String chosenVar)
 	{ // location being the eqel# where the var resides
 		int location = this.eqelContaining(pls, chosenVar);
+		boolean reverseDone = false;
 		if(this.findEqel(new eqel("+")) != -1 || this.findEqel(new eqel("-")) != -1)
 		{ // Dealing with + and -.
-			return roPlusMinus(orderedOperations, pls, location);
+			if(roPlusMinus(orderedOperations, pls, location) != -1)
+				reverseDone = true;
 		}
 		if(this.findEqel(new eqel("*")) != -1)
 		{
-			return roMultiply(orderedOperations, pls, location);
+			if(roMultiply(orderedOperations, pls, location) != -1)
+				reverseDone = true;
 		}
 		if(this.findEqel(new eqel("/")) != -1)
 		{
-			return roDivide(orderedOperations, pls, location);
+			if(roDivide(orderedOperations, pls, location) != -1)
+				reverseDone = true;
 		}
 		if(this.findEqel(new eqel("ln")) != -1 || this.findEqel(new eqel("log")) != -1)
 		{
-			return roLogs(orderedOperations, pls, location);
+			if(roLogs(orderedOperations, pls, location) != -1)
+				reverseDone = true;
 		}
 		if(this.findEqel(new eqel("^")) != -1)
 		{
-			return roPower(orderedOperations, pls, location);
+			if(roPower(orderedOperations, pls, location) != -1)
+				reverseDone = true;
+		}
+		if(reverseDone == false && this.length() == 1)
+		{
+			reverseDone = true;
+		}
+		
+		if(reverseDone)
+		{
+			if(this.at(location).type == eqel.variableType)
+				return 1;
+			else if(this.at(location).type == eqel.pieceType)
+			{
+				// Recursive
+				return pls.at(this.at(location).pieceLocation).reverseOperations(orderedOperations, pls, chosenVar);
+			}
 		}
 		else
-		{
-			System.out.println("::Piece.reverseOperations - NO + or -");
-		}
+			return -1;
 		return 1;
 	}
 	
@@ -238,7 +257,7 @@ public class Piece {
 	
 	public int roDivide(List<Piece> orderedOperations, PieceList pls, int location)
 	{// Assumes a/b is all
-		if(this.length() != 3 || (this.length() > 2 && this.at(2).otherValue != eqel.divide) || location%2 != 0) {
+		if(this.length() != 3 || (this.length() > 2 && this.at(1).otherValue != eqel.divide) || location%2 != 0) {
 			System.out.println("ERROR: Divide operator with incorrect number/order of eqel elements");
 			return -1;
 		}
@@ -352,6 +371,50 @@ public class Piece {
 		}
 		
 		return 1;
+	}
+	
+	public int reverseImplement(List<Piece> orderedOperations, PieceList pls)
+	{
+		//Return id of Piece
+		int copyid = pls.add();
+		pls.at(copyid).transfer(this);
+		int currentId = copyid;
+		for(int i=0;i<orderedOperations.size();++i)
+		{
+			Piece toperation = orderedOperations.get(i);
+			
+			int nextid = pls.add(); // Contain next operation
+			eqel pieceEqel = new eqel(currentId, eqel.pieceType); // Eqel holding this piece (paren)
+			
+			if(toperation.length() == 1)
+			{ // logs, lns.
+				pls.at(nextid).add(toperation.at(0));
+				pls.at(nextid).add(pieceEqel);
+			}
+			else if(toperation.length() == 2)
+			{
+				boolean completed = false;
+				if(toperation.at(0).type == eqel.operatorType)
+				{
+					pls.at(nextid).add(pieceEqel);
+					pls.at(nextid).add(toperation.at(0));
+					pls.at(nextid).add(toperation.at(1));
+					completed=true;
+				}
+				if(toperation.at(1).type == eqel.operatorType)
+				{
+					pls.at(nextid).add(toperation.at(0));
+					pls.at(nextid).add(toperation.at(1));
+					pls.at(nextid).add(pieceEqel);
+					completed=true;
+				}
+				if(!completed)
+					return -1;
+			}
+			
+			currentId = nextid;
+		}
+		return currentId;
 	}
 	
 }

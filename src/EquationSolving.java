@@ -30,19 +30,27 @@ public class EquationSolving {
         PieceList alleq = new PieceList();
         
         // READ CONSTANTS WITH XML FILE
-		List<Variable> allConstants = null;
-		allConstants = readXmlConstants("constants.xml");
-		// store constant list in PieceList, since that's basically the only universally
-		//   used object.
-		alleq.constants = allConstants;
+        loadConstants(alleq, "constants.xml");
         
         // PARSE THE INPUT
-        List<String> parts = basicParse(input);
-        int mainid = parse(parts, alleq);
+        int mainid = parse(input, alleq);
         
-        orderParse(mainid, alleq);
-        
-        alleq.display();
+        List<Variable> varlist = new ArrayList<>();
+        findVariables(varlist, mainid, alleq);
+        int special = -1;
+        for(int i=0;i<varlist.size();++i)
+        {
+			System.out.print("Define " + varlist.get(i).name + " (? = solve for this):");
+			String sval = scanner.nextLine();
+			if(sval.equals(new String("?")))
+				special = i;
+			else
+				varlist.get(i).value = Double.parseDouble(sval);
+		}
+		String toSolve = varlist.get(special).name;
+		varlist.remove(special);
+		
+		System.out.println(evaluate(alleq, mainid, toSolve, varlist));
         
         /*
         //EVALUATING WITH VARIABLES
@@ -57,7 +65,7 @@ public class EquationSolving {
 		}
 		double finalval = alleq.at(mainid).evaluate(varlist, alleq);
 		System.out.println("Value is " + finalval);
-		*/
+		
 		
 		//SOLVING FOR VARIABLE
 		List<Variable> varlist = new ArrayList<>();
@@ -89,6 +97,7 @@ public class EquationSolving {
 		System.out.println("Solved For ID: " + solvedId);
 		
 		alleq.display();
+		*/
 		
     }
     
@@ -124,7 +133,7 @@ public class EquationSolving {
 		return parts;
 	}
     
-    public static int parse(List<String> parts, PieceList pls)
+    public static int creatorParse(List<String> parts, PieceList pls)
     {
 		// Return id of main eq.
 		// Creat the main "piece" associated with this list.
@@ -166,8 +175,8 @@ public class EquationSolving {
 				else
 					endparts.add(parts.get(i));
 			}
-			int beginid = parse(beginparts, pls);
-			int endid = parse(endparts, pls);
+			int beginid = creatorParse(beginparts, pls);
+			int endid = creatorParse(endparts, pls);
 			eqel beginElement = new eqel(beginid, eqel.pieceType);
 			eqel equalSign = new eqel("=");
 			eqel endElement = new eqel(endid, eqel.pieceType);
@@ -240,7 +249,7 @@ public class EquationSolving {
 					insideParts.add(parts.get(i+j));
 				}
 				i += j;
-				int parenSectionId = parse(insideParts, pls);
+				int parenSectionId = creatorParse(insideParts, pls);
 				eqel thisPiece = new eqel(parenSectionId, eqel.pieceType);
 				output.add(thisPiece);
 			}
@@ -541,6 +550,38 @@ public class EquationSolving {
 		return finalId;
 	}
 	
+	public static double evaluate(PieceList pls, int mainid, String varname, List<Variable> variables)
+	{ // Solve for "varname" variable, using values in "variables" WITH AN EQUAL
+		int redoneId = solveFor(pls, mainid, varname);
+		Piece pieceToEvaluate = pls.at(pls.at(redoneId).at(2).pieceLocation);
+		return pieceToEvaluate.evaluate(variables, pls);
+	}
+	
+	public static double evaluate(PieceList pls, int mainid, Variable varname, List<Variable> variables)
+	{ // Solve for "varname" variable, using values in "variables" WITH AN EQUAL
+		return evaluate(pls, mainid, varname.name, variables);
+	}
+	
+	public static double evaluate(PieceList pls, int mainid, List<Variable> variables)
+	{ // Solve an expression NOT CONTAINING AN EQUAL
+		return pls.at(mainid).evaluate(variables, pls);
+	}
+	
+	public static void loadConstants(PieceList pls, String filename)
+	{
+		List<Variable> allConstants = null;
+		allConstants = readXmlConstants(filename);
+		pls.constants = allConstants;
+		//Constants will be stored in the PieceList -- the database containing all equation data.
+	}
+	
+	public static int parse(String input, PieceList alleq)
+	{
+		List<String> parts = basicParse(input);
+        int mainid = creatorParse(parts, alleq);
+        orderParse(mainid, alleq);
+        return mainid;
+	}
 	
     
 }

@@ -12,6 +12,7 @@ import java.util.List;
 class Equation
 {
 	PieceList pieces = new PieceList();
+	List<Variable> vardef = new ArrayList<>();
 	int mainid = 0;
 	
 	public Equation() {}

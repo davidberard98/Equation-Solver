@@ -30,10 +30,15 @@ public class EquationSolving {
         PieceList alleq = new PieceList();
         
         // READ CONSTANTS WITH XML FILE
-        loadConstants(alleq, "constants.xml");
+        //loadConstants(alleq, "constants.xml");
+        
+        Equation maineq = new Equation();
+        maineq.parse(input);
+        
+        Equation meqc = maineq.isolate(0);
         
         // PARSE THE INPUT
-        int mainid = parse(input, alleq);
+/*        int mainid = parse(input, alleq);
         
         List<Variable> varlist = new ArrayList<>();
         findVariables(varlist, mainid, alleq);
@@ -51,7 +56,7 @@ public class EquationSolving {
 		varlist.remove(special);
 		
 		System.out.println(evaluate(alleq, mainid, toSolve, varlist));
-        
+        */
         /*
         //EVALUATING WITH VARIABLES
         List<Variable> varlist = new ArrayList<>();

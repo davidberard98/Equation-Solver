@@ -34,6 +34,7 @@ public class EquationSolving {
         
         Equation maineq = new Equation();
         maineq.parse(input);
+	System.out.println(maineq.pieces.at(maineq.mainid).svalue(maineq.pieces));
         
         Equation meqc = maineq.isolate(0);
         

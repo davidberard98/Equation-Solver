@@ -416,5 +416,35 @@ public class Piece {
 		}
 		return currentId;
 	}
+
+	public String svalue(PieceList pls)
+	{
+		String output = new String();
+		for(int i=0;i<allElements.size();++i)
+		{
+			eqel teqel = allElements.get(i);
+			if(teqel.type == eqel.operatorType)
+			{
+				output += eqel.opString(teqel.otherValue);
+			}
+			else if(teqel.type == eqel.numberType)
+			{
+				output += Double.toString(teqel.numberValue);
+			}
+			else if(teqel.type == eqel.variableType || teqel.type == eqel.constantType)
+			{
+				output += teqel.name;
+			}
+			else if(teqel.type == eqel.equalType)
+			{
+				output += "=";
+			}
+			else if(teqel.type == eqel.pieceType)
+			{
+				output += "(" + pls.at(teqel.pieceLocation).svalue(pls) + ")";
+			}
+		}
+		return output;
+	}
 	
 }

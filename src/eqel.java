@@ -139,13 +139,30 @@ public class eqel {
         }
         return type;
 	}
-    
+
     public static char eltype(char in) { // element type
         //char "in" is an actual character
         //char out is just an element type
         if(in == 5) {}
         return 'a';
     }
+
+	public static String opString(int optype) {
+		switch(optype) {
+			case plus:	return new String("+");
+			case minus:	return new String("-");
+			case multiply:	return new String("*");
+			case divide:	return new String("/");
+			case lparen:	return new String("(");
+			case rparen:	return new String(")");
+			case equal:	return new String("=");
+			case factorial:	return new String("!");
+			case power: 	return new String("^");
+			case logten:	return new String("log");
+			case naturallog:return new String("ln");
+			default:	return new String("?op?");
+		}
+	}
     
     public String value() {
         if(type == operatorType)

@@ -9,11 +9,13 @@ package equationsolving;
 import java.util.ArrayList;
 import java.util.List;
 
-class Equation
+public class Equation
 {
 	PieceList pieces = new PieceList();
 	List<Variable> vardef = new ArrayList<>();
+	List<String> names = new ArrayList<>();
 	int mainid = 0;
+	int refid = 0;
 	
 	public Equation() {}
 	public Equation(String input) { parse(input); }

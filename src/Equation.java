@@ -136,5 +136,16 @@ public class Equation
 		return mainid;
 	}
 	
+	public void transfer(Equation tcpy)
+	{
+		pieces.clear();
+		pieces.addAll(tcpy.pieces);
+		vardef.clear();
+		vardef.addAll(tcpy.vardef);
+		names.clear();
+		names.addAll(tcpy.names);
+		refid = tcpy.refid;
+		mainid = tcpy.mainid;
+	}
 	
 }
